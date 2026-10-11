@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Report a problem – CampusVoice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F8;--surface:#FFFFFF;--ink:#14213D;--muted:#566176;--line:#D9DEE6;
+  --brand:#1F3A8A;--brand-ink:#FFFFFF;--accent:#1B8A7A;--alert:#C62F2F;--alert-bg:#FDECEC;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0E1424;--surface:#161E33;--ink:#EAEFF9;--muted:#9AA6BF;--line:#26304A;--brand:#7C9BFF;--brand-ink:#0E1424;--accent:#4FD1BD;--alert:#FF7A7A;--alert-bg:#3A1A22}
+}
+:root[data-theme="dark"]{--bg:#0E1424;--surface:#161E33;--ink:#EAEFF9;--muted:#9AA6BF;--line:#26304A;--brand:#7C9BFF;--brand-ink:#0E1424;--accent:#4FD1BD;--alert:#FF7A7A;--alert-bg:#3A1A22}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0;letter-spacing:-.02em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+
+.sos{background:var(--alert-bg);color:var(--alert);font-weight:600;font-size:.95rem}
+.sos .wrap{max-width:1080px;padding-top:8px;padding-bottom:8px}
+.sos a{font-weight:700;text-decoration:none;border-bottom:2px solid currentColor}
+header{background:var(--surface);border-bottom:1px solid var(--line)}
+header .in{max-width:1080px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font:800 1.35rem "Bricolage Grotesque",sans-serif;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo i{width:28px;height:28px;border-radius:50% 50% 50% 4px;background:var(--brand);display:inline-block}
+header a.back{color:var(--muted);font-weight:600;text-decoration:none}
+
+main{padding:40px 0 64px}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:800}
+.intro{color:var(--muted);margin:10px 0 28px}
+form{display:grid;gap:22px}
+fieldset{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:22px;margin:0;min-width:0}
+legend{font:700 1.15rem "Bricolage Grotesque",sans-serif;padding:0 8px}
+.field{display:grid;gap:6px;margin-top:16px}
+.field:first-of-type{margin-top:0}
+label,.lbl{font-weight:600}
+.hint{color:var(--muted);font-size:.92rem;font-weight:400}
+input[type=text],input[type=email],input[type=tel],input[type=datetime-local],select,textarea{
+  width:100%;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:1rem "Source Sans 3",sans-serif}
+textarea{min-height:140px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.err{color:var(--alert);font-size:.92rem;font-weight:600;min-height:0}
+.invalid{border-color:var(--alert)!important}
+
+.sev{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sev label{display:block;cursor:pointer}
+.sev input{position:absolute;opacity:0}
+.sev span{display:block;text-align:center;padding:12px 6px;border:2px solid var(--line);border-radius:10px;background:var(--bg);font-weight:600}
+.sev input:checked+span{border-color:var(--brand);background:var(--surface);box-shadow:inset 0 -4px 0 var(--brand)}
+.sev input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+
+.warn{display:none;background:var(--alert-bg);color:var(--alert);border-radius:12px;padding:14px 16px;font-weight:600}
+.warn.show{display:block}
+.warn a{font-weight:700}
+
+.anon{display:flex;gap:14px;align-items:flex-start;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer}
+.anon input{width:22px;height:22px;margin-top:3px;accent-color:var(--brand);flex:none}
+#idBlock{margin-top:18px}
+#idBlock.off{display:none}
+
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;background:var(--bg)}
+.drop input{display:none}
+.btn{display:inline-block;font:700 1rem "Source Sans 3",sans-serif;padding:13px 22px;border-radius:10px;border:2px solid var(--brand);background:var(--brand);color:var(--brand-ink);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+#fileList{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+#fileList li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:.95rem}
+#fileList button{background:none;border:none;color:var(--alert);font:600 .95rem inherit;cursor:pointer}
+.check{display:flex;gap:12px;align-items:flex-start}
+.check input{width:20px;height:20px;margin-top:4px;accent-color:var(--brand);flex:none}
+.hp{position:absolute;left:-9999px}
+
+#done{display:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px;text-align:center}
+#done h2{font-size:1.8rem;margin-bottom:10px}
+#codeBox{font:800 2rem "Bricolage Grotesque",sans-serif;letter-spacing:.06em;background:var(--bg);border:2px dashed var(--brand);border-radius:12px;padding:16px;margin:18px 0;word-break:break-all}
+.acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:600px){.row{grid-template-columns:1fr}.sev{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="sos"><div class="wrap">In danger now, or a fire or serious injury? Call <a href="tel:999">999</a> first. Report here once you are safe.</div></div>
+<header><div class="in"><a class="logo" href="index.html"><i aria-hidden="true"></i>CampusVoice</a><a class="back" href="index.html">Back to home</a></div></header>
+
+<main>
+<div class="wrap">
+  <h1>Report a problem</h1>
+  <p class="intro">Tell us what happened. Fields marked * are required. You can stay anonymous.</p>
+
+  <form id="reportForm" novalidate>
+    <fieldset>
+      <legend>What happened</legend>
+      <div class="field">
+        <label for="category">Type of problem *</label>
+        <select id="category" name="category" required>
+          <option value="">Choose one</option>
+          <option>Ragging or harassment</option>
+          <option>Hostel or accommodation</option>
+          <option>Security concern</option>
+          <option>Accident or injury</option>
+          <option>Fire or electrical hazard</option>
+          <option>Other</option>
+        </select>
+        <div class="err" data-for="category"></div>
+      </div>
+      <div class="field">
+        <label for="title">Short summary *</label>
+        <input type="text" id="title" name="title" maxlength="120" placeholder="e.g. Seniors forcing juniors to stay awake at night">
+        <div class="err" data-for="title"></div>
+      </div>
+      <div class="field">
+        <label for="desc">Describe what happened *</label>
+        <textarea id="desc" name="desc" maxlength="3000" placeholder="Who, what, how often, and anything else that helps us act. You don't need to name anyone if you are not comfortable."></textarea>
+        <span class="hint"><span id="count">0</span> / 3000</span>
+        <div class="err" data-for="desc"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Where and when</legend>
+      <div class="row">
+        <div class="field">
+          <label for="location">Location *</label>
+          <input type="text" id="location" name="location" maxlength="120" placeholder="Building, hostel block, room">
+          <div class="err" data-for="location"></div>
+        </div>
+        <div class="field">
+          <label for="when">Date and time *</label>
+          <input type="datetime-local" id="when" name="when">
+          <div class="err" data-for="when"></div>
+        </div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="sevLbl">How serious is it? *</span>
+        <div class="sev" role="radiogroup" aria-labelledby="sevLbl">
+          <label><input type="radio" name="severity" value="Low"><span>Low</span></label>
+          <label><input type="radio" name="severity" value="Medium"><span>Medium</span></label>
+          <label><input type="radio" name="severity" value="High"><span>High</span></label>
+          <label><input type="radio" name="severity" value="Critical"><span>Critical</span></label>
+        </div>
+        <div class="err" data-for="severity"></div>
+      </div>
+      <div class="warn" id="warn" role="alert">This looks urgent. If anyone is in danger right now, call <a href="tel:999">999</a> before submitting.</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Evidence (optional)</legend>
+      <div class="drop">
+        <p style="margin:0 0 12px">Add photos or a short video.<br><span class="hint">Up to 5 files, 10 MB each. JPG, PNG, WebP or MP4.</span></p>
+        <input type="file" id="files" accept="image/jpeg,image/png,image/webp,video/mp4" multiple>
+        <label for="files" class="btn ghost" tabindex="0" id="pickBtn">Choose files</label>
+      </div>
+      <p class="hint" id="exifHint" style="margin:10px 0 0">Photos can contain your phone's location and model. If you report anonymously, remove that data before uploading.</p>
+      <ul id="fileList"></ul>
+      <div class="err" data-for="files"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Your details</legend>
+      <label class="anon">
+        <input type="checkbox" id="anon" name="anon">
+        <span><b>Report anonymously</b><br><span class="hint">We won't ask for your name or contact details. You'll get a tracking code to check progress.</span></span>
+      </label>
+      <div id="idBlock">
+        <div class="row">
+          <div class="field">
+            <label for="name">Full name *</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+            <div class="err" data-for="name"></div>
+          </div>
+          <div class="field">
+            <label for="sid">Student ID *</label>
+            <input type="text" id="sid" name="sid">
+            <div class="err" data-for="sid"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="email">University email *</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+            <div class="err" data-for="email"></div>
+          </div>
+          <div class="field">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <div class="check">
+      <input type="checkbox" id="consent">
+      <label for="consent" style="font-weight:400">I confirm this report is true to the best of my knowledge. I understand it will be reviewed by university staff. *</label>
+    </div>
+    <div class="err" data-for="consent"></div>
+
+    <div><button class="btn" type="submit" id="submitBtn">Submit report</button></div>
+  </form>
+
+  <section id="done" aria-live="polite">
+    <h2>Report submitted</h2>
+    <p>Save this tracking code. It's the only way to check your report if you stay anonymous.</p>
+    <div id="codeBox"></div>
+    <div class="acts">
+      <button class="btn" id="copyBtn" type="button">Copy code</button>
+      <a class="btn ghost" href="index.html#track">Check status</a>
+      <a class="btn ghost" href="index.html">Back to home</a>
+    </div>
+    <p class="hint" id="copyMsg" role="status"></p>
+  </section>
+</div>
+</main>
+
+<script>
+(function(){
+  var MAX_FILES=5, MAX_MB=10, TYPES=['image/jpeg','image/png','image/webp','video/mp4'];
+  var $=function(id){return document.getElementById(id)};
+  var form=$('reportForm'), files=[];
+
+  // preselect category from ?category=Ragging etc.
+  var map={ragging:'Ragging or harassment',accommodation:'Hostel or accommodation',security:'Security concern',accident:'Accident or injury',fire:'Fire or electrical hazard'};
+  var q=new URLSearchParams(location.search).get('category');
+  if(q&&map[q.toLowerCase()]) $('category').value=map[q.toLowerCase()];
+
+  // date cannot be in the future
+  function nowLocal(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+  $('when').max=nowLocal();
+
+  $('desc').addEventListener('input',function(){$('count').textContent=this.value.length});
+
+  // urgent warning
+  function checkUrgent(){
+    var sev=(form.severity.value||''), cat=$('category').value;
+    $('warn').classList.toggle('show', sev==='Critical'||cat==='Fire or electrical hazard'||cat==='Accident or injury'&&sev==='High');
+  }
+  $('category').addEventListener('change',checkUrgent);
+  form.querySelectorAll('input[name=severity]').forEach(function(r){r.addEventListener('change',checkUrgent)});
+  checkUrgent();
+
+  // anonymous toggle
+  function toggleAnon(){
+    var a=$('anon').checked;
+    $('idBlock').classList.toggle('off',a);
+    $('exifHint').style.fontWeight=a?'600':'400';
+  }
+  $('anon').addEventListener('change',toggleAnon);
+
+  // files
+  $('pickBtn').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();$('files').click()}});
+  $('files').addEventListener('change',function(){
+    var msg=[];
+    Array.prototype.forEach.call(this.files,function(f){
+      if(files.length>=MAX_FILES){msg.push('Only '+MAX_FILES+' files allowed.');return}
+      if(TYPES.indexOf(f.type)<0){msg.push(f.name+': file type not allowed.');return}
+      if(f.size>MAX_MB*1048576){msg.push(f.name+': larger than '+MAX_MB+' MB.');return}
+      files.push(f);
+    });
+    this.value='';
+    setErr('files',msg.filter(function(m,i,a){return a.indexOf(m)===i}).join(' '));
+    renderFiles();
+  });
+  function renderFiles(){
+    var ul=$('fileList');ul.innerHTML='';
+    files.forEach(function(f,i){
+      var li=document.createElement('li'),s=document.createElement('span'),b=document.createElement('button');
+      s.textContent=f.name+' ('+(f.size/1048576).toFixed(1)+' MB)';
+      b.type='button';b.textContent='Remove';b.setAttribute('aria-label','Remove '+f.name);
+      b.onclick=function(){files.splice(i,1);renderFiles()};
+      li.appendChild(s);li.appendChild(b);ul.appendChild(li);
+    });
+  }
+
+  // validation
+  function setErr(name,msg){
+    var el=form.parentNode.querySelector('.err[data-for='+name+']');
+    if(el)el.textContent=msg||'';
+    var inp=$(name);if(inp&&inp.classList)inp.classList.toggle('invalid',!!msg);
+  }
+  function validate(){
+    var bad=[],v=function(id){return $(id).value.trim()};
+    function need(name,cond,msg){if(!cond){setErr(name,msg);bad.push(name)}else setErr(name,'')}
+    need('category',v('category')!=='','Choose the type of problem.');
+    need('title',v('title').length>=5,'Write a short summary (at least 5 characters).');
+    need('desc',v('desc').length>=20,'Describe what happened in at least 20 characters.');
+    need('location',v('location').length>=2,'Say where it happened.');
+    need('when',v('when')!==''&&v('when')<=nowLocal(),'Pick a date and time that is not in the future.');
+    need('severity',!!form.severity.value,'Choose how serious it is.');
+    if(!$('anon').checked){
+      need('name',v('name').length>=2,'Enter your full name.');
+      need('sid',v('sid').length>=3,'Enter your student ID.');
+      need('email',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')),'Enter a valid email address.');
+    }
+    need('consent',$('consent').checked,'Please confirm before submitting.');
+    return bad;
+  }
+
+  function makeCode(){
+    var chars='ABCDEFGHJKMNPQRSTUVWXYZ23456789',a=new Uint32Array(8),out='';
+    crypto.getRandomValues(a);
+    for(var i=0;i<8;i++){out+=chars[a[i]%chars.length];if(i===3)out+='-'}
+    return 'CV-'+out;
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if($('website').value) return; // bot trap
+    var bad=validate();
+    if(bad.length){var el=$(bad[0]);if(el&&el.focus)el.focus();else form.querySelector('input[name=severity]').focus();return}
+
+    var anon=$('anon').checked;
+    var report={
+      category:$('category').value,title:$('title').value.trim(),description:$('desc').value.trim(),
+      location:$('location').value.trim(),occurredAt:$('when').value,severity:form.severity.value,
+      anonymous:anon,trackingCode:makeCode(),attachments:files.map(function(f){return f.name}),
+      reporter:anon?null:{name:$('name').value.trim(),studentId:$('sid').value.trim(),email:$('email').value.trim(),phone:$('phone').value.trim()}
+    };
+    // Step 3: send `report` (and the files) to the server with fetch() here.
+
+    console.log('Report ready to send:',report);
+       try{
+     var s=JSON.parse(sessionStorage.getItem('cv_session')||'null');
+     var list=JSON.parse(localStorage.getItem('cv_reports')||'[]');
+     list.push({trackingCode:report.trackingCode,title:report.title,category:report.category,
+       severity:report.severity,status:'Submitted',createdAt:Date.now(),
+       ownerId:(!anon&&s)?s.id:null});
+     localStorage.setItem('cv_reports',JSON.stringify(list));
+   }catch(e){}
+
+    $('submitBtn').disabled=true;
+    form.style.display='none';
+    $('codeBox').textContent=report.trackingCode;
+    $('done').style.display='block';
+    window.scrollTo(0,0);
+    $('done').querySelector('h2').setAttribute('tabindex','-1');
+    $('done').querySelector('h2').focus();
+  });
+
+  $('copyBtn').addEventListener('click',function(){
+    var t=$('codeBox').textContent;
+    function ok(){$('copyMsg').textContent='Copied. Keep it somewhere safe.'}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){$('copyMsg').textContent='Copy failed. Select the code and copy it manually.'})}
+    else{$('copyMsg').textContent='Select the code and copy it manually.'}
+  });
+})();
+</script>
+</body>
+</html>

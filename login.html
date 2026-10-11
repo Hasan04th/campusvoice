@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student log in – CampusVoice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F8;--surface:#FFFFFF;--ink:#14213D;--muted:#566176;--line:#D9DEE6;
+  --brand:#1F3A8A;--brand-ink:#FFFFFF;--accent:#1B8A7A;--alert:#C62F2F;--alert-bg:#FDECEC;--demo-bg:#FFF4CC;--demo-ink:#5C4400;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0E1424;--surface:#161E33;--ink:#EAEFF9;--muted:#9AA6BF;--line:#26304A;--brand:#7C9BFF;--brand-ink:#0E1424;--accent:#4FD1BD;--alert:#FF7A7A;--alert-bg:#3A1A22;--demo-bg:#3A3112;--demo-ink:#FFE08A}
+}
+:root[data-theme="dark"]{--bg:#0E1424;--surface:#161E33;--ink:#EAEFF9;--muted:#9AA6BF;--line:#26304A;--brand:#7C9BFF;--brand-ink:#0E1424;--accent:#4FD1BD;--alert:#FF7A7A;--alert-bg:#3A1A22;--demo-bg:#3A3112;--demo-ink:#FFE08A}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 "Source Sans 3",system-ui,sans-serif}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0;letter-spacing:-.02em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sos{background:var(--alert-bg);color:var(--alert);font-weight:600;font-size:.95rem}
+.sos div{max-width:1080px;margin:0 auto;padding:8px 20px}
+.sos a{font-weight:700;text-decoration:none;border-bottom:2px solid currentColor}
+header{background:var(--surface);border-bottom:1px solid var(--line)}
+header .in{max-width:1080px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font:800 1.35rem "Bricolage Grotesque",sans-serif;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo i{width:28px;height:28px;border-radius:50% 50% 50% 4px;background:var(--brand);display:inline-block}
+header a.back{color:var(--muted);font-weight:600;text-decoration:none}
+
+main{padding:40px 20px 64px}
+.card{max-width:460px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
+.card h1{font-size:1.9rem;font-weight:800}
+.sub{color:var(--muted);margin:8px 0 20px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:22px}
+.tabs button{padding:11px;border:0;background:var(--bg);color:var(--muted);font:700 1rem "Source Sans 3",sans-serif;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+form{display:grid;gap:16px}
+.field{display:grid;gap:6px}
+label{font-weight:600}
+.hint{color:var(--muted);font-size:.92rem;font-weight:400}
+input[type=text],input[type=email],input[type=tel],input[type=password]{
+  width:100%;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:1rem "Source Sans 3",sans-serif}
+input:focus{border-color:var(--brand);outline:none}
+input.invalid{border-color:var(--alert)}
+.err{color:var(--alert);font-size:.92rem;font-weight:600}
+.pw{position:relative}
+.pw input{padding-right:70px}
+.pw button{position:absolute;right:6px;top:6px;bottom:6px;border:0;background:none;color:var(--brand);font:700 .95rem "Source Sans 3",sans-serif;cursor:pointer;padding:0 10px}
+.btn{display:inline-block;width:100%;text-align:center;font:700 1rem "Source Sans 3",sans-serif;padding:13px 22px;border-radius:10px;border:2px solid var(--brand);background:var(--brand);color:var(--brand-ink);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.linkbtn{background:none;border:0;color:var(--brand);font:700 1rem "Source Sans 3",sans-serif;cursor:pointer;padding:6px}
+.linkbtn:disabled{color:var(--muted);cursor:not-allowed}
+.msg{border-radius:10px;padding:12px 14px;font-weight:600;display:none}
+.msg.show{display:block}
+.msg.bad{background:var(--alert-bg);color:var(--alert)}
+.demo{background:var(--demo-bg);color:var(--demo-ink);border-radius:10px;padding:12px 14px;font-size:.95rem;margin-bottom:16px}
+.demo b{font:800 1.4rem "Bricolage Grotesque",sans-serif;letter-spacing:.2em;display:block}
+.otp{display:flex;gap:8px;justify-content:space-between}
+.otp input{width:100%;max-width:56px;height:60px;text-align:center;font:700 1.6rem "Bricolage Grotesque",sans-serif;padding:0}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.foot{margin-top:18px;color:var(--muted);font-size:.92rem;text-align:center}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="sos"><div>In danger now, or a fire or serious injury? Call <a href="tel:999">999</a> first.</div></div>
+<header><div class="in"><a class="logo" href="index.html"><i aria-hidden="true"></i>CampusVoice</a><a class="back" href="index.html">Back to home</a></div></header>
+
+<main>
+<div class="card">
+
+  <!-- Step 1: log in / create account -->
+  <section id="pAuth">
+    <h1 id="title">Student log in</h1>
+    <p class="sub" id="subtitle">Log in with your student ID or university email. We'll then verify your mobile number.</p>
+    <div class="tabs" role="tablist" aria-label="Account">
+      <button role="tab" id="tabLogin" aria-selected="true" aria-controls="fLogin">Log in</button>
+      <button role="tab" id="tabReg" aria-selected="false" aria-controls="fReg">Create account</button>
+    </div>
+
+    <form id="fLogin" novalidate>
+      <div class="field">
+        <label for="lid">Student ID or email</label>
+        <input type="text" id="lid" autocomplete="username">
+        <div class="err" id="e-lid"></div>
+      </div>
+      <div class="field">
+        <label for="lpw">Password</label>
+        <div class="pw"><input type="password" id="lpw" autocomplete="current-password"><button type="button" data-show="lpw">Show</button></div>
+        <div class="err" id="e-lpw"></div>
+      </div>
+      <div class="msg bad" id="loginMsg" role="alert"></div>
+      <button class="btn" type="submit">Continue</button>
+    </form>
+
+    <form id="fReg" novalidate hidden>
+      <div class="field">
+        <label for="rname">Full name</label>
+        <input type="text" id="rname" autocomplete="name">
+        <div class="err" id="e-rname"></div>
+      </div>
+      <div class="field">
+        <label for="rid">Student ID</label>
+        <input type="text" id="rid" autocomplete="off">
+        <div class="err" id="e-rid"></div>
+      </div>
+      <div class="field">
+        <label for="rmail">University email</label>
+        <input type="email" id="rmail" autocomplete="email">
+        <div class="err" id="e-rmail"></div>
+      </div>
+      <div class="field">
+        <label for="rphone">Mobile number</label>
+        <input type="tel" id="rphone" autocomplete="tel" placeholder="01XXXXXXXXX">
+        <span class="hint">We'll send a 6-digit code to this number.</span>
+        <div class="err" id="e-rphone"></div>
+      </div>
+      <div class="field">
+        <label for="rpw">Password</label>
+        <div class="pw"><input type="password" id="rpw" autocomplete="new-password"><button type="button" data-show="rpw">Show</button></div>
+        <span class="hint">At least 8 characters, with a letter and a number.</span>
+        <div class="err" id="e-rpw"></div>
+      </div>
+      <div class="msg bad" id="regMsg" role="alert"></div>
+      <button class="btn" type="submit">Send verification code</button>
+    </form>
+  </section>
+
+  <!-- Step 2: OTP -->
+  <section id="pOtp" hidden>
+    <h1>Verify your number</h1>
+    <p class="sub">Enter the 6-digit code we sent to <b id="maskedPhone"></b>. It expires in 5 minutes.</p>
+    <div class="demo" id="demoBox" hidden>Demo mode: no real SMS is sent. Your code is<b id="demoCode"></b></div>
+    <form id="fOtp" novalidate>
+      <div class="otp" id="otpBoxes" role="group" aria-label="6-digit code"></div>
+      <div class="msg bad" id="otpMsg" role="alert"></div>
+      <button class="btn" type="submit" id="verifyBtn">Verify and continue</button>
+      <div class="row2">
+        <button class="linkbtn" type="button" id="resend" disabled>Resend code</button>
+        <button class="linkbtn" type="button" id="changeNum">Go back</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Step 3: done -->
+  <section id="pDone" hidden>
+    <h1>You're logged in</h1>
+    <p class="sub" id="welcome"></p>
+    <div style="display:grid;gap:12px">
+      <a class="btn" href="report.html">Report a problem</a>
+      <a class="btn ghost" href="index.html">Go to home</a>
+      <button class="btn ghost" type="button" id="logout">Log out</button>
+    </div>
+  </section>
+
+  <p class="foot">Never share your code with anyone, including university staff.</p>
+</div>
+</main>
+
+<script>
+(function(){
+  /* ---------- Settings ---------- */
+  var DEMO_MODE=true;                         // set to false when a real SMS backend exists
+  var PHONE_RE=/^(?:\+?88)?(01[3-9]\d{8})$/;  // Bangladesh mobile numbers; change for other countries
+  var OTP_TTL=5*60*1000, OTP_TRIES=3, RESEND_SECS=30;
+
+  var $=function(id){return document.getElementById(id)};
+  var pending=null, otp=null, timer=null;
+
+  /* ---------- Demo storage (replace with server) ---------- */
+  function getUsers(){try{return JSON.parse(localStorage.getItem('cv_users')||'{}')}catch(e){return {}}}
+  function saveUsers(u){try{localStorage.setItem('cv_users',JSON.stringify(u))}catch(e){}}
+  function findUser(key){
+    key=key.toLowerCase();var u=getUsers();
+    if(u[key])return u[key];
+    for(var k in u){if(u[k].email===key)return u[k]}
+    return null;
+  }
+  async function hash(s){
+    if(window.crypto&&crypto.subtle){
+      var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('cv:'+s));
+      return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');
+    }
+    return 'plain:'+btoa(unescape(encodeURIComponent(s)));
+  }
+
+  /* ---------- Helpers ---------- */
+  function show(id){['pAuth','pOtp','pDone'].forEach(function(p){$(p).hidden=(p!==id)});window.scrollTo(0,0)}
+  function err(id,m){var e=$('e-'+id),i=$(id);e.textContent=m||'';if(i)i.classList.toggle('invalid',!!m)}
+  function msg(id,m){var e=$(id);e.textContent=m||'';e.classList.toggle('show',!!m)}
+  function normPhone(p){var m=p.replace(/[\s-]/g,'').match(PHONE_RE);return m?m[1]:null}
+  function mask(p){return p.slice(0,3)+'••••••'+p.slice(-2)}
+
+  /* ---------- Tabs ---------- */
+  function tab(reg){
+    $('tabLogin').setAttribute('aria-selected',!reg);$('tabReg').setAttribute('aria-selected',reg);
+    $('fLogin').hidden=reg;$('fReg').hidden=!reg;
+    $('title').textContent=reg?'Create your account':'Student log in';
+    $('subtitle').textContent=reg?'Use your university details. We verify your mobile number so only real students can report.':'Log in with your student ID or university email. We\'ll then verify your mobile number.';
+    msg('loginMsg');msg('regMsg');
+  }
+  $('tabLogin').onclick=function(){tab(false)};
+  $('tabReg').onclick=function(){tab(true)};
+  document.querySelectorAll('[data-show]').forEach(function(b){
+    b.onclick=function(){var i=$(b.dataset.show),h=i.type==='password';i.type=h?'text':'password';b.textContent=h?'Hide':'Show'};
+  });
+
+  /* ---------- Log in ---------- */
+  $('fLogin').addEventListener('submit',async function(e){
+    e.preventDefault();msg('loginMsg');
+    var id=$('lid').value.trim(),pw=$('lpw').value,ok=true;
+    err('lid',id?'':'Enter your student ID or email.');if(!id)ok=false;
+    err('lpw',pw?'':'Enter your password.');if(!pw)ok=false;
+    if(!ok)return;
+    var u=findUser(id);
+    if(!u||u.hash!==await hash(pw)){msg('loginMsg','Student ID, email or password is incorrect.');return}
+    pending={mode:'login',user:u};
+    startOtp(u.phone);
+  });
+
+  /* ---------- Create account ---------- */
+  $('fReg').addEventListener('submit',async function(e){
+    e.preventDefault();msg('regMsg');
+    var name=$('rname').value.trim(),sid=$('rid').value.trim(),mail=$('rmail').value.trim().toLowerCase(),
+        ph=normPhone($('rphone').value),pw=$('rpw').value,ok=true;
+    function chk(id,c,m){err(id,c?'':m);if(!c)ok=false}
+    chk('rname',name.length>=2,'Enter your full name.');
+    chk('rid',sid.length>=3,'Enter your student ID.');
+    chk('rmail',/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail),'Enter a valid university email.');
+    chk('rphone',!!ph,'Enter a valid mobile number, like 01712345678.');
+    chk('rpw',pw.length>=8&&/[A-Za-z]/.test(pw)&&/\d/.test(pw),'Use at least 8 characters with a letter and a number.');
+    if(!ok)return;
+    if(findUser(sid)||findUser(mail)){msg('regMsg','An account with this student ID or email already exists. Log in instead.');return}
+    pending={mode:'register',user:{id:sid.toLowerCase(),name:name,email:mail,phone:ph,hash:await hash(pw)}};
+    startOtp(ph);
+  });
+
+  /* ---------- OTP ---------- */
+  var boxes=[];
+  (function build(){
+    for(var i=0;i<6;i++){
+      var inp=document.createElement('input');
+      inp.type='text';inp.inputMode='numeric';inp.maxLength=1;inp.autocomplete=i===0?'one-time-code':'off';
+      inp.setAttribute('aria-label','Digit '+(i+1));
+      $('otpBoxes').appendChild(inp);boxes.push(inp);
+      (function(i,inp){
+        inp.addEventListener('input',function(){
+          inp.value=inp.value.replace(/\D/g,'').slice(-1);
+          if(inp.value&&i<5)boxes[i+1].focus();
+          if(code().length===6)$('fOtp').requestSubmit();
+        });
+        inp.addEventListener('keydown',function(e){if(e.key==='Backspace'&&!inp.value&&i>0){boxes[i-1].focus()}});
+        inp.addEventListener('paste',function(e){
+          var t=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);
+          if(!t)return;e.preventDefault();
+          t.split('').forEach(function(d,k){boxes[k].value=d});
+          boxes[Math.min(t.length,5)].focus();
+          if(t.length===6)$('fOtp').requestSubmit();
+        });
+      })(i,inp);
+    }
+  })();
+  function code(){return boxes.map(function(b){return b.value}).join('')}
+  function clearBoxes(){boxes.forEach(function(b){b.value=''});boxes[0].focus()}
+
+  function sendOtp(phone){
+    // Real version: return fetch('/api/otp/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone})});
+    var a=new Uint32Array(1);crypto.getRandomValues(a);
+    var c=String(a[0]%1000000).padStart(6,'0');
+    otp={code:c,exp:Date.now()+OTP_TTL,tries:0};
+    if(DEMO_MODE){$('demoBox').hidden=false;$('demoCode').textContent=c}
+    return Promise.resolve();
+  }
+  async function startOtp(phone){
+    await sendOtp(phone);
+    $('maskedPhone').textContent=mask(phone);
+    msg('otpMsg');show('pOtp');clearBoxes();cooldown();
+  }
+  function cooldown(){
+    var s=RESEND_SECS,b=$('resend');b.disabled=true;clearInterval(timer);
+    b.textContent='Resend code in '+s+'s';
+    timer=setInterval(function(){
+      s--;
+      if(s<=0){clearInterval(timer);b.disabled=false;b.textContent='Resend code'}
+      else b.textContent='Resend code in '+s+'s';
+    },1000);
+  }
+  $('resend').onclick=async function(){await sendOtp(pending.user.phone);msg('otpMsg');clearBoxes();cooldown()};
+  $('changeNum').onclick=function(){clearInterval(timer);otp=null;pending=null;show('pAuth')};
+
+  $('fOtp').addEventListener('submit',function(e){
+    e.preventDefault();
+    var c=code();
+    if(c.length<6){msg('otpMsg','Enter all 6 digits.');return}
+    if(!otp||Date.now()>otp.exp){msg('otpMsg','This code has expired. Request a new one.');return}
+    if(otp.tries>=OTP_TRIES){msg('otpMsg','Too many wrong attempts. Request a new code.');return}
+    // Real version: verify on the server with fetch('/api/otp/verify', ...)
+    if(c!==otp.code){
+      otp.tries++;
+      msg('otpMsg',otp.tries>=OTP_TRIES?'Too many wrong attempts. Request a new code.':'That code is not correct. '+(OTP_TRIES-otp.tries)+' tries left.');
+      clearBoxes();return;
+    }
+    otp=null;clearInterval(timer);
+    var u=pending.user;
+    if(pending.mode==='register'){var all=getUsers();all[u.id]=u;saveUsers(all)}
+    try{sessionStorage.setItem('cv_session',JSON.stringify({id:u.id,name:u.name,at:Date.now()}))}catch(x){}
+    $('welcome').textContent=pending.mode==='register'?'Welcome, '+u.name+'. Your account is ready and your number is verified.':'Welcome back, '+u.name+'. Your number is verified.';
+    pending=null;show('pDone');
+  });
+
+  $('logout').onclick=function(){try{sessionStorage.removeItem('cv_session')}catch(x){}location.reload()};
+
+  // already logged in this session?
+  try{
+    var s=JSON.parse(sessionStorage.getItem('cv_session')||'null');
+    if(s&&s.name){$('welcome').textContent='Welcome back, '+s.name+'.';show('pDone')}
+  }catch(x){}
+})();
+</script>
+</body>
+</html>
